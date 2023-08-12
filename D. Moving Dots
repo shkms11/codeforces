@@ -1,0 +1,44 @@
+//https://codeforces.com/contest/1788/problem/D
+
+#include <bits/stdc++.h>
+using namespace std;
+int MOD = 1e9 + 7;
+unsigned long long power(unsigned long long x, unsigned long long y, int p = MOD)
+{
+    unsigned long long res =1 ;
+    x = x%p;
+    while(y>0)
+    {
+        if(y&1)
+            res = (res*x)%p;
+ 
+        y= y>> 1;
+        x= (x*x)%p;
+    }
+    return res;
+}
+int main()
+{
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+    int n;
+    cin >>n;
+    vector<long long>v;
+    long long tmp=0,ans=0;
+ 
+   int m=n;
+    while(m--){
+        cin >> tmp;
+        v.push_back(tmp);
+    }
+ 
+    for(int i=0; i<n; i++){
+        for(int j=i+1; j<n; j++){
+             int leftElements=lower_bound(v.begin(),v.end(),v[i]-(v[j]-v[i]))-v.begin();
+            int rightElements=v.end()-lower_bound(v.begin(),v.end(),v[j]+v[j]-v[i]);
+            ans+=power(2,rightElements+leftElements);
+            ans%=MOD;
+            }
+        }
+        cout << ans << '\n';
+    }
