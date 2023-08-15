@@ -1,0 +1,86 @@
+// https://codeforces.com/contest/1679/problem/D
+
+#include <bits/stdc++.h>
+using namespace std;
+#define maxx 300000
+vector<int>ver[maxx];
+int id[maxx],xx[maxx],yy[maxx],sign[maxx],dp[maxx];
+long long ary[maxx];
+vector<int>v[maxx];
+queue<int>q;
+inline int cmp(int x, int y){
+    return ary[x]<ary[y];
+}
+ 
+int main()
+{
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+    long long n,m,k;
+ 
+    cin >> n >> m >> k;
+ 
+ 
+ 
+    for(int i=1; i<=n; i++){
+        cin >> ary[i];
+        id[i]=i;
+    }
+    sort(id+1, id+1+n, cmp);
+ 
+    // sorted index
+    // binary search on id
+ 
+    for(int i=1; i<=m; i++)
+        cin >> xx[i] >> yy[i];
+ 
+    int low=0,high=n+1,mid;
+ 
+    while(low+1<high){
+        mid=(low+high) >> 1;
+ 
+        for(int i=1; i<=m; i++)
+            if(ary[xx[i]] <= ary[id[mid]] && ary[yy[i]] <= ary[id[mid]])
+                sign[yy[i]]++,v[xx[i]].push_back(yy[i]);
+ 
+        int tmp=0;
+ 
+        for(int i=1; i<=n; i++)
+            if(sign[i] == 0)
+                q.push(i);
+ 
+ 
+        while(!q.empty()){
+            int x= q.front();
+            q.pop();
+            tmp++;
+ 
+            for(int i=0; i<v[x].size(); i++){
+                int y = v[x][i];
+                sign[y]--;
+                dp[y] = max(dp[y],dp[x]+1);
+ 
+                if(sign[y] ==0)
+                    q.push(y);
+            }
+        }
+ 
+        for(int i=1; i<=n; i++)
+            if(dp[i]+1>=k){
+                tmp = 0;
+                break;
+            }
+ 
+        if(tmp<n)
+            high=mid;
+        else low=mid;
+ 
+        for(int i=1; i<=n; i++)
+            v[i].clear(),sign[i] = dp[i] = 0;
+    }
+ 
+    if(high>n)
+        cout << "-1" << '\n';
+    else cout << ary[id[high]] << '\n';
+}
+ 
